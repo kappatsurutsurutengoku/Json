@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Jokes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Kjempe morsomme vitser! 😂😂😂</h1> 
+
+  <button onclick="visVits1()">Vis vits nr. 1</button> <!-- Knapp som viser vits nr. 1 -->
+  <button onclick="visAlleVitser()">Vis alle vitser</button> <!-- Knapp som viser alle vitsene -->
+  <button onclick="visTilfeldigVits()">Vis tilfeldig vits</button> <!-- Knapp som viser en tilfeldig vits -->
+
+  <div id="joke-output"></div> <!-- Her vises vitsene -->
+
+  <script>
+    let d; // Lager en variabel for å holde på dataene (vitser)
+
+    fetch('Jokes.json') 
+      .then(response => response.json()) // Leser inn JSON-filen som et JavaScript-objekt
+      .then(data => {
+        d = data; // Lagrer dataene i variabelen d
+        console.log("Jokes loaded:", d); // Sjekk om JSON ble lastet riktig i konsollen
+      })
+      .catch(error => {
+        console.error("Couldn't load JSON!", error); // Hvis noe går galt med å laste filen
+      });
+
+    function visVits1() {
+      if (!d) return; // Sjekker om dataene er lastet
+      const joke = d.jokes.find(j => j.id === "1"); // Finn vits nr. 1
+      document.getElementById("joke-output").textContent = joke.joke; // Vis vitsen på nettsiden
+    }
+
+    function visAlleVitser() {
+      if (!d) return; // Sjekker om dataene er lastet
+      const container = document.getElementById("joke-output"); 
+      container.innerHTML = ""; // Tømmer gammel tekst før vi viser nye vitser
+      d.jokes.forEach(joke => { // Går gjennom alle vitsene
+        const p = document.createElement("p"); 
+        p.textContent = joke.joke; 
+        container.appendChild(p); // Legger til vitsen på nettsiden
+      });
+    }
+
+    function visTilfeldigVits() {
+      if (!d) return; // Sjekker om dataene er lastet
+      const randomIndex = Math.floor(Math.random() * d.jokes.length); // Velger en tilfeldig vits
+      const joke = d.jokes[randomIndex]; // Henter den tilfeldige vitsen
+      document.getElementById("joke-output").textContent = joke.joke; // Vis vitsen på nettsiden
+    }
+  </script>
+</body>
+</html>
